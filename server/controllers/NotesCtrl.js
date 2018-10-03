@@ -35,8 +35,8 @@ exports.post = (req, res) => {
             const query = 'INSERT INTO notes(title) VALUES(:title)';
             const dao = [data.title];
             executePromise(connection, query, dao, true)
+                .catch(err => console.error('Insert error: ', err))
                 .then(result => sendResponse(result, res))
-                .catch(err => console.error(err));
         })
 };
 
@@ -52,7 +52,7 @@ const executePromise = (connection, query, dao, dml) => {
     return new Promise((resolve, reject) => {
         connection.execute(query, dao, { autoCommit: dml }, (queryErr, result) => {
             if(queryErr) {
-                console.error(queryErr);
+                console.error('queryErr: ', queryErr);
                 reject(query);
             }
             if (result) {
